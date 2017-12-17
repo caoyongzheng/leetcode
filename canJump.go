@@ -14,21 +14,22 @@ package leetcode
 */
 
 func canJump(nums []int) bool {
-	return canJump2(0, nums)
+	return canJump2(nums, len(nums)-1)
 }
 
-func canJump2(position int, nums []int) bool {
-	if position == len(nums) {
+func canJump2(nums []int, end int) bool {
+	zero := -1
+	for i := end - 1; i >= 0; i-- {
+		if nums[i] == 0 {
+			zero = i
+			break
+		}
+	}
+	if zero == -1 {
 		return true
 	}
-	if nums[position] == 0 {
-		return false
-	}
-	if nums[position] >= len(nums)-position-1 {
-		return true
-	}
-	for i := 1; i <= nums[position]; i++ {
-		if canJump2(position+i, nums) {
+	for i := zero - 1; i >= 0; i-- {
+		if nums[i] > zero-i && canJump2(nums, i) {
 			return true
 		}
 	}
