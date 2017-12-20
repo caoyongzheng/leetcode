@@ -1,8 +1,6 @@
 package leetcode
 
-import (
-	"strings"
-)
+import "strings"
 
 // Given two words word1 and word2, find the minimum number of steps required to convert word1 to word2. (each operation is counted as 1 step.)
 
@@ -17,23 +15,35 @@ func minDistance(word1 string, word2 string) int {
 	if len(word1) > len(word2) {
 		w1, w2 = w2, w1
 	}
-	if strings.Contains(w2, w1) {
-		return len(w2) - len(w1)
+	if len(w1) == 0 {
+		return len(w2)
 	}
-	for w1[0] == w2[0] {
-		w1, w2 = w1[1:], w2[1:]
+	if len(w1) == 1 {
+		i := strings.Index(w2, string(w1[0]))
+		if i != -1 {
+			return len(w2) - 1
+		}
+		return len(w2)
 	}
-	if strings.Contains(w2, w1) {
-		return len(w2) - len(w1)
+	i1 := strings.Index(w2, string(w1[0]))
+	i2 := strings.LastIndex(w2, string(w1[1]))
+	if i1 == -1 {
+		if i2 == 0 {
+			return minDistance(w1[1:], w2) + 1
+		}
+		return minDistance(w1[1:], w2[1:]) + 1
+	} else if i1 == 0 {
+		return minDistance(w1[1:], w2[1:])
+	} else {
+		if i1 <= len(w2)-len(w1) {
+			if i1 > i2 {
+				return minDistance(w1[1:], w2[1:]) + 1
+			}
+			return minDistance(w1, w2[1:]) + 1
+		}
+		if i2 == 0 {
+			return minDistance(w1[1:], w2) + 1
+		}
+		return minDistance(w1[1:], w2[1:]) + 1
 	}
-	r := minDistance(w1, w2[1:]) + 1
-	r1 := minDistance(w1[1:], w2[1:]) + 1
-	if r > r1 {
-		r = r1
-	}
-	r2 := minDistance(w1[1:], w2) + 1
-	if r > r2 {
-		r = r2
-	}
-	return r
 }
