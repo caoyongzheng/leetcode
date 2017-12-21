@@ -16,16 +16,13 @@ package leetcode
 // Could you come up with an one-pass algorithm using only constant space?
 
 func sortColors(nums []int) {
-	for i, s, e := 0, 0, len(nums)-1; i <= e; {
+	for i, s, e := 0, 0, len(nums)-1; i <= e; i++ {
 		if nums[i] == 2 {
 			nums[e], nums[i] = nums[i], nums[e]
-			e--
-		} else {
-			if nums[i] == 0 {
-				nums[s], nums[i] = nums[i], nums[s]
-				s++
-			}
-			i++
+			e, i = e-1, i-1
+		} else if nums[i] == 0 {
+			nums[s], nums[i] = nums[i], nums[s]
+			s++
 		}
 	}
 }
