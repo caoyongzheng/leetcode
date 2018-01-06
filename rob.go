@@ -9,12 +9,7 @@ package leetcode
 func rob(nums []int) int {
 	m := make(map[int]int, len(nums))
 	for i := range nums {
-		robN(nums, i+1, m)
+		m[i+1] = max(m[i], m[i-1]+nums[i])
 	}
 	return m[len(nums)]
-}
-
-func robN(nums []int, n int, m map[int]int) int {
-	m[n] = max(m[n-1], m[n-2]+nums[n-1])
-	return m[n]
 }
