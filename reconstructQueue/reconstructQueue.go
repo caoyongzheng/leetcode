@@ -1,28 +1,23 @@
 package reconstructQueue
 
+import "sort"
+
+// SortPeople ...
+type SortPeople [][]int
+
+func (a SortPeople) Len() int      { return len(a) }
+func (a SortPeople) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a SortPeople) Less(i, j int) bool {
+	return a[i][0] > a[j][0] || (a[i][0] == a[j][0] && a[i][1] < a[j][1])
+}
+
 func reconstructQueue(people [][]int) [][]int {
-	frontLeftList := make([]int, len(people))
-	for i, v := range people {
-		frontLeftList[i] = v[1]
-	}
-
-	for i := 0; i < len(people); i++ {
-		first := -1
-		for j := i; j < len(people); j++ {
-			if frontLeftList[j] == 0 && (first == -1 || people[first][0] > people[j][0]) {
-				first = j
-			}
-		}
-
-		people[i], people[first] = people[first], people[i]
-		frontLeftList[i], frontLeftList[first] = frontLeftList[first], frontLeftList[i]
-
-		for j := i + 1; j < len(people); j++ {
-			if frontLeftList[j] != -1 && people[i][0] >= people[j][0] {
-				frontLeftList[j]--
-			}
+	res := SortPeople(people)
+	sort.Sort(res)
+	for i, v := range res {
+		for j := i; j > v[1]; j-- {
+			res[j], res[j-1] = res[j-1], res[j]
 		}
 	}
-
-	return people
+	return res
 }
