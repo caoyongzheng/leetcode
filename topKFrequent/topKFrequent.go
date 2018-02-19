@@ -1,27 +1,25 @@
 package topKFrequent
 
-func topKFrequent(nums []int, k int) (r []int) {
-	m := make(map[int]*[2]int)
+func topKFrequent(nums []int, k int) []int {
+	counts := make(map[int]int)
 	for _, v := range nums {
-		mv, ok := m[v]
-		if !ok {
+		counts[v]++
+	}
+
+	freqs := make([][]int, len(nums)+1)
+	for k, v := range counts {
+		freqs[v] = append(freqs[v], k)
+	}
+
+	r := make([]int, 0, k)
+	for i := len(freqs) - 1; i >= 0; i-- {
+		for _, v := range freqs[i] {
 			r = append(r, v)
-			m[v] = &[2]int{len(r) - 1, 1}
-			continue
-		}
-
-		mv[1]++
-
-		for mv[0] != 0 {
-			pmv := m[r[mv[0]-1]]
-			if pmv[1] >= mv[1] {
-				break
+			if len(r) == k {
+				return r
 			}
-			r[mv[0]], r[pmv[0]] = r[pmv[0]], r[mv[0]]
-			mv[0]--
-			pmv[0]++
 		}
 	}
-	r = r[0:k]
-	return
+
+	return r
 }
