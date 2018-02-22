@@ -15,23 +15,22 @@ type Link struct {
 
 func inorderTraversal(root *TreeNode) (r []int) {
 	l := &Link{Node: root}
-	for v := root; l != nil && v != nil; {
-		if v.Left != nil {
-			l = &Link{Node: v.Left, Next: l}
-			v = l.Node
-		} else {
-			r = append(r, v.Val)
-			v = v.Right
-			for l = l.Next; v == nil; l = l.Next {
-				if l == nil {
-					return
-				}
-				v = l.Node
-				r = append(r, v.Val)
-				v = v.Right
-			}
-			l = &Link{Node: v, Next: l}
+	for l.Node != nil {
+		node := l.Node
+		if node.Left != nil {
+			l = &Link{Node: node.Left, Next: l}
+			continue
 		}
+
+		r = append(r, node.Val)
+		for l = l.Next; node.Right == nil; l = l.Next {
+			if l == nil {
+				return
+			}
+			node = l.Node
+			r = append(r, node.Val)
+		}
+		l = &Link{Node: node.Right, Next: l}
 	}
 	return
 }
